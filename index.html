@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="header">
+            NewsQ Equalizer Prototype v0.1
+        </div>
+        <div class="main">
+            <div class="cont-2">
+                <div class="eq-slider-box">
+                    <div><span>Accountability</span></div>
+                    <div><input class="eq-slider" id="accountability" type="range" min="1" max="100" value="50"></div>
+                </div>
+                <div class="eq-slider-box">
+                    <div><span>Quality</span></div>
+                    <div><input class="eq-slider" id="quality" type="range" min="1" max="100" value="50"></div>
+                </div>
+                <div class="eq-slider-box">
+                    <div><span>Political Bias</span></div>
+                    <div><input class="eq-slider" id="bias" type="range" min="1" max="100" value="50"></div>
+                </div>
+                <div class="eq-slider-box">
+                    <div><span>Trustworthiness</span></div>
+                    <div><input class="eq-slider" id="trust" type="range" min="1" max="100" value="50"></div>
+                </div>
+                
+            </div>
+            <div class="cont-2">
+                <div id="feed">
+                    <!-- Articles will be generated automatically from the corpus.-->
+                </div>
+
+            </div>
+        </div>
+    </body>
+    <script>
+        // Define Variables
+        var sliders = document.getElementsByClassName("eq-slider")
+        var sliderValues = {
+                "accountability": 50,
+                "quality": 50,
+                "bias": 50,
+                "trust": 50
+            }
+        
+        var articles = [
+            {
+                "id": "",
+                "headline": "High Quality Article!", 
+                "twoLiner": "This is a high-quality article, as determined by various accolades and a history of quality reporting.",
+                "accountability": 50,
+                "quality": 90,
+                "bias": 50,
+                "trust": 50
+            }, 
+            {
+                "id": "",
+                "headline": "Accountable Publisher!", 
+                "twoLiner": "This article comes from a very accountable publisher, given the availability of channels to contact the publisher, submit corrections, etc.",
+                "accountability": 90,
+                "quality": 50,
+                "bias": 50,
+                "trust": 50
+            }, 
+            {
+                "id": "",
+                "headline": "Biased??", 
+                "twoLiner": "This article is very biased, based on whatever signals we have for that.",
+                "accountability": 50,
+                "quality": 50,
+                "bias": 90,
+                "trust": 50
+            }, 
+            {
+                "id": "",
+                "headline": "Trust this source!", 
+                "twoLiner": "This article comes from a publisher that is generally shown to be acting in good faith; their intentions are likely not malicious or self-serving.",
+                "accountability": 50,
+                "quality": 50,
+                "bias": 50,
+                "trust": 90
+            }
+        ]
+        // Key functions
+        function sortOrder(prop) {    
+            return function(a, b) {    
+                if (a[prop] > b[prop]) {    
+                    return 1;    
+                } else if (a[prop] < b[prop]) {    
+                    return -1;    
+                }    
+                return 0;    
+            }    
+        }
+        function populateArticles(){
+            for(let i=articles.length-1; i > -1; i--){
+                const article = document.createElement('div');
+                article.setAttribute('class','article')
+                const headline = document.createElement('h2')
+                const twoLiner = document.createElement('p')
+
+                headline.textContent = articles[i].headline;
+                twoLiner.textContent = articles[i].twoLiner;
+
+                article.appendChild(headline)
+                article.appendChild(twoLiner)
+
+                feed = document.getElementById("feed")
+                feed.appendChild(article)
+            }
+        }
+        function resortArticles(){
+            document.getElementById("feed").innerHTML = "";
+            props = Object.keys(sliderValues)
+            var max = 0, maxProp = "";
+            for(let i=0; i<props.length; i++){
+                if(sliderValues[props[i]] > max){
+                    maxProp = props[i]
+                    max = sliderValues[props[i]]
+                }       
+            }
+            console.log(maxProp)
+            articles.sort(sortOrder(maxProp))
+            populateArticles();
+        }
+        // Apply behaviors
+        for(var i=0; i < sliders.length; i++){
+            console.log(sliders[i])
+            sliders[i].oninput = function() {
+                this.style.background = 'linear-gradient(to right, rgb(8, 159, 161)  0%, #82CFD0 ' + this.value + '%, #eee ' + this.value + '%, #eee 100%)'
+                sliderValues[this.id] = this.value;
+                resortArticles();
+            };
+        }
+
+        // Populate
+        populateArticles();
+    </script>
+</html>
