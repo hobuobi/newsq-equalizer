@@ -16,7 +16,11 @@ body {
     padding: 20px;
 }
 .cont-1 {
-    
+    box-sizing: border-box;
+    display: inline-block;
+    width: 99%;
+    padding: 20px;
+    vertical-align: top;
 }
 .cont-2 {
     box-sizing: border-box;
